@@ -74,6 +74,7 @@ export const getProfiles = () => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
+    console.log(err);
     dispatch({
       type: PROFILE_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
@@ -225,6 +226,7 @@ export const deleteAccount = () => async (dispatch) => {
 
       dispatch(setAlert("ACCOUNT DELETED PERMANENTLY", "success"));
     } catch (err) {
+      console.log(err.message);
       dispatch({
         type: PROFILE_ERROR,
         payload: { msg: err.response.statusText, status: err.response.status },
