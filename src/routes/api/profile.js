@@ -8,8 +8,7 @@ const normalize = require("normalize-url");
 
 const Profile = require("../../models/profile");
 const User = require("../../models/user");
-const { findOne } = require("../../models/user");
-const { default: Axios } = require("axios");
+const Post = require("../../models/post");
 
 //  @route      GET api/profile
 //  @desc       Get Current Users Profile
@@ -150,7 +149,8 @@ router.get("/user/:user_id", async (req, res) => {
 //  @access     Private
 router.delete("/", auth, async (req, res) => {
   try {
-    // @todo - remove users posts
+    // Remove user posts
+    await Post.deleteMany({ user: req.user._id });
 
     //remove profile
     await Profile.findOneAndRemove({ user: req.user._id });
@@ -296,7 +296,7 @@ router.get("/github/:username", async (req, res) => {
       "user-agent": "node.js",
     };
 
-    const gitHubResponse = await Axios.get(uri, { headers });
+    const gitHubResponse = await axios.get(uri, { headers });
 
     res.send(gitHubResponse.data);
   } catch (err) {

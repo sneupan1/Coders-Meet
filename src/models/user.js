@@ -59,8 +59,6 @@ UserSchema.statics.findByCredentials = async function (email, password) {
     throw new Error("Invalid Credentials");
   }
 
-  console.log(user);
-  console.log(password, user.password);
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
