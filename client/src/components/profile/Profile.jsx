@@ -6,22 +6,28 @@ import ProfileTop from "./ProfileTop";
 import ProfileAbout from "./ProfileAbout";
 import ProfileExperience from "./ProfileExperience";
 import ProfileEducation from "./ProfileEducation";
+import ProfileGithub from "./ProfileGithub";
 import { getProfileById } from "../../redux/profile/profile.action";
 import { Link } from "react-router-dom";
 
 const Profile = ({
   getProfileById,
-  profile: { profile, loading },
+  profile: { profileById, loading },
   auth,
   match,
+  clearProfileById,
 }) => {
   useEffect(() => {
     getProfileById(match.params.id);
+
+    return () => {
+      clearProfileById();
+    };
   }, [getProfileById, match.params.id]);
   // profile === null ||
   return (
     <Fragment>
-      {profile === null || loading === true ? (
+      {profileById === null || loading === true ? (
         <Spinner />
       ) : (
         <Fragment>
@@ -30,19 +36,19 @@ const Profile = ({
           </Link>
           {auth.isAuthenticated &&
             auth.loading === false &&
-            auth.user._id === profile.user._id && (
+            auth.user._id === profileById.user._id && (
               <Link to="/edit-profile" className="btn btn-dark">
                 Edit Profile
               </Link>
             )}
           <div className="profile-grid my-1">
-            <ProfileTop profile={profile} />
-            <ProfileAbout profile={profile} />
+            <ProfileTop profile={profileById} />
+            <ProfileAbout profile={profileById} />
             <div className="profile-exp bg-white p-2">
               <h2 className="text-primary">Experience</h2>
-              {profile.experience.length > 0 ? (
+              {profileById.experience.length > 0 ? (
                 <Fragment>
-                  {profile.experience.map((exp) => (
+                  {profileById.experience.map((exp) => (
                     <ProfileExperience key={exp._id} experience={exp} />
                   ))}
                 </Fragment>
@@ -52,9 +58,9 @@ const Profile = ({
             </div>
             <div className="profile-edp bg-white p-2">
               <h2 className="text-primary">Education</h2>
-              {profile.education.length > 0 ? (
+              {profileById.education.length > 0 ? (
                 <Fragment>
-                  {profile.education.map((edu) => (
+                  {profileById.education.map((edu) => (
                     <ProfileEducation key={edu._id} education={edu} />
                   ))}
                 </Fragment>
@@ -62,6 +68,9 @@ const Profile = ({
                 <h4>No education credentials</h4>
               )}
             </div>
+            {profileById.githubusername && (
+              <ProfileGithub username={profileById.githubusername} />
+            )}
           </div>
         </Fragment>
       )}
@@ -80,4 +89,9 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getProfileById })(Profile);
+export default connect(mapStateToProps, {
+  getProfileById,
+  clearProfileById: () => ({
+    type: "CLEAR_PROFILE_BY_ID",
+  }),
+})(Profile);

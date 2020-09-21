@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useEffect } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -47,7 +47,7 @@ const EditProfile = ({
       }
       setFormData(profileData);
     }
-  }, [loading, getCurrentProfile, profile, initialState]);
+  }, [loading, getCurrentProfile, profile]);
 
   const {
     company,

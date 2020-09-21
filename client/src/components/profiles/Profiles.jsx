@@ -5,13 +5,20 @@ import Spinner from "../layout/spinner";
 import ProfileItem from "../profiles/ProfileItem";
 import { getProfiles } from "../../redux/profile/profile.action";
 
-const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
+const Profiles = ({
+  getProfiles,
+  clearProfiles,
+  profile: { profiles, isFetching },
+}) => {
   useEffect(() => {
     getProfiles();
+    return () => {
+      clearProfiles();
+    };
   }, [getProfiles]);
   return (
     <Fragment>
-      {loading ? (
+      {isFetching ? (
         <Spinner />
       ) : (
         <Fragment>
@@ -43,4 +50,9 @@ Profiles.propTypes = {
 const mapStateToProps = (state) => ({
   profile: state.profile,
 });
-export default connect(mapStateToProps, { getProfiles })(Profiles);
+export default connect(mapStateToProps, {
+  getProfiles,
+  clearProfiles: () => ({
+    type: "CLEAR_PROFILES",
+  }),
+})(Profiles);

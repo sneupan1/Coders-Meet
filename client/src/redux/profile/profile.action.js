@@ -3,24 +3,34 @@ import { setAlert } from "../alert/alert.action";
 import { ProfileActionTypes } from "./profile.types.js";
 const {
   GET_PROFILE,
-  GET_PROFILES,
   PROFILE_ERROR,
   UPDATE_PROFILE,
   ACCOUNT_DELETED,
   CLEAR_PROFILE,
   GET_REPOS,
+  GET_PROFILE_BY_ID,
+  FETCH_PROFILES_START,
+  FETCH_PROFILES_SUCCESS,
+  FETCH_PROFILE_START,
+  FETCH_PROFILE_SUCCESS,
 } = ProfileActionTypes;
 
 //GET current users profile
 
 export const getCurrentProfile = () => async (dispatch) => {
+  dispatch({
+    type: FETCH_PROFILE_START,
+  });
   try {
     const res = await axios.get("/api/profile/me");
     dispatch({
-      type: GET_PROFILE,
+      type: FETCH_PROFILE_SUCCESS,
       payload: res.data,
     });
   } catch (err) {
+    dispatch({
+      type: CLEAR_PROFILE,
+    });
     dispatch({
       type: PROFILE_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
@@ -64,13 +74,16 @@ export const createProfile = (formData, history, edit = false) => async (
 //Get all profiles
 export const getProfiles = () => async (dispatch) => {
   dispatch({
+    type: FETCH_PROFILES_START,
+  });
+  dispatch({
     type: CLEAR_PROFILE,
   });
   try {
     const res = await axios.get("/api/profile");
 
     dispatch({
-      type: GET_PROFILES,
+      type: FETCH_PROFILES_SUCCESS,
       payload: res.data,
     });
   } catch (err) {
@@ -88,7 +101,7 @@ export const getProfileById = (userId) => async (dispatch) => {
     const res = await axios.get(`/api/profile/user/${userId}`);
 
     dispatch({
-      type: GET_PROFILE,
+      type: GET_PROFILE_BY_ID,
       payload: res.data,
     });
   } catch (err) {
