@@ -1,6 +1,0 @@
-{
-  "mongoURI": "mongodb+srv://sneupan1:Bhuntey123@webdev-5xli1.mongodb.net/CodersMeet?retryWrites=true&w=majority",
-  "JWT_SECRET": "thisismyjwtsecret",
-  "githubClientId": "d377003266e63463ff6c",
-  "githubSecret": "f8de05bc86ecca2e053a77e5544dd428841ff800"
-}
